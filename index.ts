@@ -1,5 +1,4 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
 import AQConstant from './AQConstant';
 import AQFormValidate from './AQFormValidate';
 import AQRestClient from './AQRestClient';
