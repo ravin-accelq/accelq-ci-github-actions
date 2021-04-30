@@ -1,4 +1,4 @@
-const core = require('@actions/core');
+import core from '@actions/core';
 import AQConstant from './AQConstant';
 import AQFormValidate from './AQFormValidate';
 import AQRestClient from './AQRestClient';
@@ -185,7 +185,7 @@ async function run() {
         }
     }
     catch (err) {
-        throw new Error(err.message);
+        core.setFailed(err.message);
     }
 }
 
