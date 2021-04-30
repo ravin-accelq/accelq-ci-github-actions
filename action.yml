@@ -1,0 +1,32 @@
+name: 'ACCELQ CI'
+description: 'Execute ACCELQ registered CI Jobs from Github Actions'
+
+inputs:
+  appURL:
+    description: 'Your ACCELQ Application URL in the exact following format: https://&lt;hostname&gt;:&lt;port_num&gt;'
+    required: true
+  userName:
+    description: 'Your ACCELQ User ID'
+    required: true
+  apiKey:
+    description: 'API key available in Profile section of ACCELQ'
+    required: true
+  tenantCode:
+    description: 'Tenant Code displayed in the Profile section of ACCELQ'
+    required: true
+  jobId:
+    description: 'This ID should come from the CI job you saved in ACCELQ application'
+    required: true
+  runParam:
+    description: 'Run Params(optional) should be of the form (Customer Name=John Todd & Customer Id=232)'
+    required: false
+  proxyHost:
+    description: 'Proxy Host (optional)'
+    required: false
+  proxyPort:
+    description: 'Proxy Port (optional)'
+    required: false
+
+runs:
+  using: 'node12'
+  main: 'index.js'
