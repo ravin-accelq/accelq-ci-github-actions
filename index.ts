@@ -172,16 +172,18 @@ async function run() {
         res = await testConnection(appURL, userName, apiKey, tenantCode, jobId, runParam, proxyHost, proxyPort);
         
         if (res === null) {
-            throw new Error("Something went wrong in extension");
+            core.setFailed("Something went wrong in extension");
+            return;
         } else if (res) {
-            throw new Error(res);
+            core.setFailed(res);
+            return;
         }
         // executeJob
         res = await executeJob(appURL, userName, apiKey, tenantCode, jobId, runParam, proxyHost, proxyPort);
         if (res.status) {
             console.log('Run Completed!!!');
         } else {
-            throw new Error(res.error?.message);
+            res.error?.message ? core.setFailed(res.error.message) : core.setFailed("Job failed!!!");
         }
     }
     catch (err) {
