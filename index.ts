@@ -1,8 +1,8 @@
-import core from '@actions/core';
 import AQConstant from './AQConstant';
 import AQFormValidate from './AQFormValidate';
 import AQRestClient from './AQRestClient';
 import { AQUtil } from './AQUtil';
+const core = require("@actions/core");
 
 async function testConnection(appURL:string, userName:string, apiKey:string, tenantCode:string, jobId:string, runParam:string, proxyHost:string, proxyPort:string) {
     AQRestClient.setBaseURL(appURL, tenantCode);
@@ -175,7 +175,6 @@ async function run() {
             core.setFailed("Something went wrong in extension");
             return;
         } else if (res) {
-            console.log('here', res);
             core.setFailed(res);
             return;
         }
