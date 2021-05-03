@@ -1,4 +1,4 @@
-name: 'ACCELQ CI'
+name: 'ACCELQ Github-A Connect'
 description: 'Execute ACCELQ registered CI Jobs from Github Actions'
 
 inputs:
