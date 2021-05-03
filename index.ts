@@ -175,6 +175,7 @@ async function run() {
             core.setFailed("Something went wrong in extension");
             return;
         } else if (res) {
+            console.log('here', res);
             core.setFailed(res);
             return;
         }
