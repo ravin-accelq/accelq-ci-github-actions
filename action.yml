@@ -3,7 +3,7 @@ description: 'Execute ACCELQ registered CI Jobs from Github Actions'
 
 inputs:
   appURL:
-    description: 'Your ACCELQ Application URL in the exact following format: https://&lt;hostname&gt;:&lt;port_num&gt;'
+    description: 'Your ACCELQ Application URL in the exact following format: https://<hostname>:<port_num>'
     required: true
   userName:
     description: 'Your ACCELQ User ID'

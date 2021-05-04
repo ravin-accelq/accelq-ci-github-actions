@@ -89,12 +89,6 @@ async function executeJob(appURL:string, userName:string, apiKey:string, tenantC
             if (attempt == AQConstant.JOB_PICKUP_RETRY_COUNT) {
                 throw new Error ("No agent available to pickup the job");
             }
-            if(jobStatus == AQConstant.TEST_JOB_STATUS.SCHEDULED.toUpperCase()){
-                attempt = attempt + 1;
-            }
-            if(attempt == AQConstant.JOB_PICKUP_RETRY_COUNT) {
-                throw new Error("No agent available to pickup the job");
-            }
             if((jobStatus == AQConstant.TEST_JOB_STATUS.COMPLETED.toUpperCase()) 
                 || (jobStatus == AQConstant.TEST_JOB_STATUS.ABORTED.toUpperCase()) 
                 || (jobStatus == AQConstant.TEST_JOB_STATUS.FAILED.toUpperCase())
