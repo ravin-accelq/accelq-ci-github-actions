@@ -43,6 +43,7 @@ const AQRestClient = {
             }
             return "";
         }catch (e){
+            console.log('Error: ', e);
             const res = e.response;
             if (!res || res.status == 404) {
                 return "Connection request failed. Please check the URL and Tenant Code.";
