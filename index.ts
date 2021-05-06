@@ -2,7 +2,9 @@ import AQConstant from './AQConstant';
 import AQFormValidate from './AQFormValidate';
 import AQRestClient from './AQRestClient';
 import { AQUtil } from './AQUtil';
-const core = require("@actions/core");
+// import { getInput } from './input';
+import { getInput } from './test_input';
+// const core = require("@actions/core");
 
 async function testConnection(appURL:string, userName:string, apiKey:string, tenantCode:string, jobId:string, runParam:string, proxyHost:string, proxyPort:string) {
     AQRestClient.setBaseURL(appURL, tenantCode);
@@ -131,14 +133,8 @@ async function executeJob(appURL:string, userName:string, apiKey:string, tenantC
 
 async function run() {
     try {
-        const appURL = core.getInput('appURL', {required: true}) || "";
-        const userName = core.getInput('userName', {required: true}) || "";
-        const apiKey = core.getInput('apiKey', {required: true}) || "";
-        const tenantCode = core.getInput('tenantCode', {required: true}) || "";
-        const jobId = core.getInput('jobId', {required: true}) || "";
-        const runParam = core.getInput('runParam') || "";
-        const proxyHost = core.getInput('proxyHost') || "";
-        const proxyPort = core.getInput('proxyPort') || "";
+        const {appURL, userName, apiKey, tenantCode, jobId, runParam, proxyHost, proxyPort} = getInput();
+        console.log(appURL, userName, apiKey, tenantCode, jobId, proxyHost, proxyPort);
         // validateFORM
         let res: string | null | {status: boolean, error?: Error };
         res = AQFormValidate.validateAppURL(appURL);
@@ -175,11 +171,13 @@ async function run() {
         if (res.status) {
             console.log('Run Completed!!!');
         } else {
-            core.setFailed(res.error?.message || "Job Failed!!!");
+            console.log('res.error?.message || "Job Failed!!!"');
+            // core.setFailed(res.error?.message || "Job Failed!!!");
         }
     }
     catch (err) {
-        core.setFailed(err.message);
+        console.log(err.message);
+        // core.setFailed(err.message);
     }
 }
 
