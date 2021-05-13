@@ -1,7 +1,7 @@
-import AQConstant from './AQConstant';
-import AQFormValidate from './AQFormValidate';
-import AQRestClient from './AQRestClient';
-import { AQUtil } from './AQUtil';
+import AQConstant from './core/AQConstant';
+import AQFormValidate from './core/AQFormValidate';
+import AQRestClient from './core/AQRestClient';
+import { AQUtil } from './core/AQUtil';
 const core = require("@actions/core");
 
 async function testConnection(appURL:string, userName:string, apiKey:string, tenantCode:string, jobId:string, runParam:string, proxyHost:string, proxyPort:string) {

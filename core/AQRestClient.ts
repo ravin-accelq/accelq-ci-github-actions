@@ -43,7 +43,6 @@ const AQRestClient = {
             }
             return "";
         }catch (e){
-            console.log('Error: ', e);
             const res = e.response;
             if (!res || res.status == 404) {
                 return "Connection request failed. Please check the URL and Tenant Code.";
@@ -52,7 +51,7 @@ const AQRestClient = {
                 return "Connection request failed. Please check connection parameters.";
             }
             if (res.status >= 500) {
-                return "Server Error" + res.data.message;
+                return "Server Error: " + res.data.message;
             }
             if (res.status != 200) {
                 return "Template Job ID does not exist.";
