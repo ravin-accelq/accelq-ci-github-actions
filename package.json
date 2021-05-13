@@ -1,7 +1,7 @@
 {
   "name": "accelq-ci-github-actions",
   "version": "1.0.0",
-  "description": "Testing Github Actions ACCELQ CI Plugin",
+  "description": "Github Actions ACCELQ CI Plugin",
   "main": "index.js",
   "scripts": {
     "build": "webpack --config ./webpack.config.js --mode production"
