@@ -10,18 +10,23 @@ export const AQUtil = {
     getRunParamJsonPayload: (runParamStr: string) => {
         if(runParamStr == null || runParamStr.trim().length == 0)
             return;
-        const splitOnAmp = runParamStr.split("&");
-        let jsonObject = {} as any;
-        splitOnAmp.forEach(split => {
-            const splitOnEquals = split.split("=");
-            if(splitOnEquals.length == 2) {
-                const key = splitOnEquals[0].trim(), value = splitOnEquals[1].trim();
-                if(key !== "" && value !== "") {
-                    jsonObject[key] = value;
+        try {
+            JSON.parse(runParamStr);
+            return runParamStr;
+        } catch(e) {
+            const splitOnAmp = runParamStr.split("&");
+            let jsonObject = {} as any;
+            splitOnAmp.forEach(split => {
+                const splitOnEquals = split.split("=");
+                if(splitOnEquals.length == 2) {
+                    const key = splitOnEquals[0].trim(), value = splitOnEquals[1].trim();
+                    if(key !== "" && value !== "") {
+                        jsonObject[key] = value;
+                    }
                 }
-            }
-        });
-        return JSON.stringify(jsonObject);
+            });
+            return JSON.stringify(jsonObject);
+        }
     },
     getFormattedTime:(a: string | number | Date, b: string | number | Date) => {
         const startDate = new Date(a);

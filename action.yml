@@ -18,7 +18,7 @@ inputs:
     description: 'This ID should come from the CI job you saved in ACCELQ application'
     required: true
   runParam:
-    description: 'Run Params(optional) should be of the form (Customer Name=John Todd & Customer Id=232)'
+    description: 'Run Params(optional) should be JSON string form example: {"username": "John Todd", "password": "bxW&=UVw"}'
     required: false
   proxyHost:
     description: 'Proxy Host (optional)'
