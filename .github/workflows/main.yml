@@ -10,7 +10,7 @@ jobs:
       uses: accelq/accelq-ci-github-actions@v1.3
       with:
         appURL: 'https://poc.accelq.io/'
-        userName: 'tenantAdmin@democopy.com'
-        apiKey: '8dshi7d2h1aZ7QPTO8JCr825YV4XJLm9'
-        tenantCode: 'democopy'
-        jobId: '92'
+        userName: 'vivek.burman@accelq.com'
+        apiKey: 'MkcmCQ-_4f61gt-0BWOA6FIavGYTovljJi_9JzzDLAE'
+        tenantCode: 'demo'
+        jobId: '383564'
