@@ -7,7 +7,7 @@ jobs:
     steps:
     - name: Automation Step
       id: accelq_auto
-      uses: accelq/accelq-ci-github-actions@v1.1
+      uses: accelq/accelq-ci-github-actions@v1.3
       with:
         appURL: 'https://poc.accelq.io/'
         userName: 'tenantAdmin@democopy.com'
