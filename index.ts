@@ -18,9 +18,19 @@ async function testConnection(appURL:string, userName:string, apiKey:string, ten
 function sleep (milliSeconds:number) {
     return new Promise(resolve => setTimeout(resolve, milliSeconds));
 }
-async function executeJob(appURL:string, userName:string, apiKey:string, tenantCode:string, jobId:string, runParam:string, proxyHost:string, proxyPort:string) {
+function isFloat(val: number) {
+    return typeof val === "number" && !Number.isNaN(val) && !Number.isInteger(val);
+}
+
+function inRange(val: number) {
+    return val >= -1 && val <= 100; 
+}
+async function executeJob(appURL:string, userName:string, apiKey:string, tenantCode:string, jobId:string, 
+    runParam:string, proxyHost:string, proxyPort:string, stepFailureThreshold: string) {
     let summaryObj = null;
     let realJobPid = 0;
+    let failureThreshold = +stepFailureThreshold;
+
     try {
         AQRestClient.setBaseURL(appURL, tenantCode);
         if (proxyHost && proxyHost.length > 0) {
@@ -68,6 +78,15 @@ async function executeJob(appURL:string, userName:string, apiKey:string, tenantC
                 }
                 console.log("Purpose: " + jobPurpose);
                 console.log("Total Test Cases: " + totalTestCases);
+                console.log("Step Failure threshold: " + stepFailureThreshold);
+                if (isFloat(failureThreshold)) {
+                    failureThreshold = Math.trunc(failureThreshold);
+                    console.log(`Warning: Invalid value (${failureThreshold}) passed for Step Failure Threshold. Truncating the value to ${failureThreshold} (Only integers between 0 and 100, and -1 are allowed).`);
+                }
+                if (!inRange(failureThreshold)) {
+                    console.log(`Warning: Ignoring the Step Failure threshold. Invalid value (${failureThreshold}) passed. Valid values are 0 to 100, or -1 to ignore threshold.`);
+                    failureThreshold = 0;
+                }
                 console.log();
                 console.log("Results Link: " + resultAccessURL);
                 console.log("Need to abort? Click on the link above, login to ACCELQ and abort the run.");
@@ -99,18 +118,21 @@ async function executeJob(appURL:string, userName:string, apiKey:string, tenantC
         }
         console.log("Results Link: " + resultAccessURL);
         console.log();
-        if (failCount > 0 
-            || jobStatus == AQConstant.TEST_JOB_STATUS.ABORTED.toUpperCase()
+        const failedPercentage = Math.trunc((failCount / totalCount) * 100);
+
+        if (jobStatus == AQConstant.TEST_JOB_STATUS.ABORTED.toUpperCase()
             || jobStatus == AQConstant.TEST_JOB_STATUS.FAILED.toUpperCase()
             || jobStatus == AQConstant.TEST_JOB_STATUS.ERROR.toUpperCase()) {
             throw new Error(AQConstant.LOG_DELIMITER + "Run Failed");
+        } else if(failCount > 0) {
+            if(failureThreshold != -1 && failedPercentage >= failureThreshold) {
+                throw new Error(AQConstant.LOG_DELIMITER + "Automation test step failed (test case failure count exceeds the threshold limit)");
+            }
         }
-        console.log("**********************************************");
-        console.log("*** Completed: ACCELQ Test Automation Step ***");
-        console.log("**********************************************");
-        console.log();
-        return {
-            status: true
+        return  {
+            jobId: realJobPid,
+            status: true,
+            error: null
         };
     } catch(e) {
         summaryObj = await AQRestClient.getJobSummary(realJobPid, apiKey, userName);
@@ -123,8 +145,9 @@ async function executeJob(appURL:string, userName:string, apiKey:string, tenantC
         console.log("Status: " + summaryObj["status"]);
         console.log("Pass: " + summaryObj["pass"]);
         return {
+            jobId: realJobPid,
             status: false,
-            error: e
+            error: e,
         };
     }
 }
@@ -139,8 +162,11 @@ async function run() {
         const runParam = core.getInput('runParam') || "";
         const proxyHost = core.getInput('proxyHost') || "";
         const proxyPort = core.getInput('proxyPort') || "";
+        const stepFailureThreshold = core.getInput('stepFailureThreshold') || "";
+
         // validateFORM
-        let res: string | null | {status: boolean, error?: Error };
+        let res: string | null | {
+            jobId: number; status: boolean, error?: any };
         res = AQFormValidate.validateAppURL(appURL);
         if (res != null) {
             throw new Error('ACCELQ App URL: ' + res);
@@ -171,15 +197,19 @@ async function run() {
             throw new Error(res);
         }
         // executeJob
-        res = await executeJob(appURL, userName, apiKey, tenantCode, jobId, runParam, proxyHost, proxyPort);
+        res = await executeJob(appURL, userName, apiKey, tenantCode, jobId, runParam, proxyHost, proxyPort, stepFailureThreshold);
         if (res.status) {
             console.log('Run Completed!!!');
         } else {
             core.setFailed(res.error?.message || "Job Failed!!!");
         }
     }
-    catch (err) {
+    catch (err: any) {
         core.setFailed(err.message);
+    } finally {
+        console.log("**********************************************");
+        console.log("*** Completed: ACCELQ Test Automation Step ***");
+        console.log("**********************************************");
     }
 }
 
