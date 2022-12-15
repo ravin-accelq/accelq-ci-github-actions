@@ -11,6 +11,6 @@ jobs:
       with:
         appURL: 'https://poc.accelq.io/'
         userName: 'vivek.burman@accelq.com'
-        apiKey: 'MkcmCQ-_4f61gt-0BWOA6FIavGYTovljJi_9JzzDLAE'
+        apiKey: 'MkcmCQ-_4f61gt-ljJi_9JzzDLAE'
         tenantCode: 'demo'
         jobId: '383564'
