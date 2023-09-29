@@ -19,8 +19,8 @@ const AQRestClient = {
         let protocol = this.BASE_URL.split("://")[0];
         return new HttpsProxyAgent(`${protocol}://${this.PROXY_HOST}:${this.PROXY_PORT}`);
     },
-    testConnection: async function (apiKey:string, userId:string, jobId:string, runParam:string|undefined) {
-        const jsonObj = AQUtil.getRunParam(jobId, runParam);
+    testConnection: async function (apiKey:string, userId:string, jobId:string, runParam:string|undefined, expireTimeInMinutes: number) {
+        const jsonObj = AQUtil.getRunParam(jobId, runParam, expireTimeInMinutes);
         try {
             let proxyConfig;
             if (this.isProxySet()) {
@@ -59,8 +59,8 @@ const AQRestClient = {
             return null;
         }  
     },
-    triggerJob: async function (apiKey:string, userId:string, jobId:string, runParam:string|undefined) {
-        const jsonObj = AQUtil.getRunParam(jobId, runParam);
+    triggerJob: async function (apiKey:string, userId:string, jobId:string, runParam:string|undefined, expireTimeInMinutes: number, agentList?:string[]) {
+        const jsonObj = AQUtil.getRunParam(jobId, runParam, expireTimeInMinutes, agentList);
         try {
             let proxyConfig;
             if (this.isProxySet()) {

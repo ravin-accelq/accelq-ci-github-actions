@@ -23,8 +23,8 @@ enum TEST_JOB_STATUS {
 const AQConstants = {
     LOG_DELIMITER : ">>> ",
     USER_AGENT : "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
-    JOB_STATUS_POLL_TIME : 30 * 1000,
-    JOB_PICKUP_RETRY_COUNT: 30,
+    JOB_PICKUP_RETRY_TIME_THRESHOLD_IN_MINS: 15,
+    JOB_STATUS_POLL_TIME: 30 * 1000,
 
     JOB_WEB_LINK: "#/forward?entityType=9&resultId={0}",
     EXT_JOB_WEB_LINK: "#/resultext?tenant={0}&resultId={1}",

@@ -1,10 +1,12 @@
 export const AQUtil = {
-    getRunParam: (jobId:string, runParam: string|undefined) => {
+    getRunParam: (jobId:string, runParam: string|undefined, expireTimeInMinutes: number, agentList?:string[]) => {
         let jsonObj = {} as any;
         if (runParam && runParam.length > 0) {
             jsonObj["runProperties"] = JSON.parse(runParam);
         }
         jsonObj["jobPid"] = +jobId;
+        agentList && (jsonObj["agentNameList"] = agentList);
+        Number.isFinite(expireTimeInMinutes) && (jsonObj["expireTimeInMinutes"] = expireTimeInMinutes);
         return jsonObj;
     },
     getRunParamJsonPayload: (runParamStr: string) => {
@@ -63,5 +65,8 @@ export const AQUtil = {
             res += " " + (difference_In_Seconds > 1 ? (difference_In_Seconds + " seconds") : (difference_In_Seconds + " second"));
         }
         return res;
+    },
+    isWaitTimeExceeded : (start: number, maxWait: number) => {
+        return Math.floor((Date.now() - start) / (1000 * 60)) > maxWait;
     }
 }
