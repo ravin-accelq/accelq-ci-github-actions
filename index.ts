@@ -161,6 +161,7 @@ async function executeJob(appURL:string, userName:string, apiKey:string, tenantC
         }
         return  {
             jobId: realJobPid,
+            resultUrl: resultAccessURL,
             status: true,
             error: null
         };
@@ -176,6 +177,7 @@ async function executeJob(appURL:string, userName:string, apiKey:string, tenantC
         console.log("Pass: " + summaryObj["pass"]);
         return {
             jobId: realJobPid,
+            resultUrl: "",
             status: false,
             error: e,
         };
@@ -198,7 +200,7 @@ async function run() {
 
         // validateFORM
         let res: string | null | {
-            jobId: number; status: boolean, error?: any };
+            jobId: number; resultUrl: string, status: boolean, error?: any };
         res = AQFormValidate.validateAppURL(appURL);
         if (res != null) {
             throw new Error('ACCELQ App URL: ' + res);
@@ -235,6 +237,7 @@ async function run() {
         } else {
             core.setFailed(res.error?.message || "Job Failed!!!");
         }
+        core.setOutput("result-url", res.resultUrl);
     }
     catch (err: any) {
         core.setFailed(err.message);

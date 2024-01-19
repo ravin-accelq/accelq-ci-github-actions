@@ -35,7 +35,9 @@ inputs:
   waitForJobCompletion:
     description: 'If true, wait for the job to be completed. If false, run the job and exit. Default is true.'
     required: false
-
+outputs:
+  result-url:
+    description: "The ACCELQ url to access the job results"
 runs:
   using: 'node12'
   main: 'index.js'
