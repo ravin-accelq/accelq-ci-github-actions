@@ -38,7 +38,7 @@ function getMaxWaitTime(maxWaitTimeInMins: string) {
 }
 
 async function executeJob(appURL:string, userName:string, apiKey:string, tenantCode:string, jobId:string, 
-    runParam:string, proxyHost:string, proxyPort:string, stepFailureThreshold: string, maxWaitTimeInMins: string) {
+    runParam:string, proxyHost:string, proxyPort:string, stepFailureThreshold: string, maxWaitTimeInMins: string, waitForJobCompletion: boolean) {
     let summaryObj = null;
     let realJobPid = 0;
     let failureThreshold = +stepFailureThreshold;
@@ -71,7 +71,8 @@ async function executeJob(appURL:string, userName:string, apiKey:string, tenantC
         const resultAccessURL = AQRestClient.getResultExternalAccessURL(realJobPid.toString(), tenantCode);
         let error = false;
         let hasLoggedLinks = false;
-        while(true) {
+        console.log("Wait for job completion: " + waitForJobCompletion)
+        while(waitForJobCompletion) {
             try {
                 summaryObj = await AQRestClient.getJobSummary(realJobPid, apiKey, userName);
                 error = false;
@@ -160,6 +161,7 @@ async function executeJob(appURL:string, userName:string, apiKey:string, tenantC
         }
         return  {
             jobId: realJobPid,
+            resultUrl: resultAccessURL,
             status: true,
             error: null
         };
@@ -175,6 +177,7 @@ async function executeJob(appURL:string, userName:string, apiKey:string, tenantC
         console.log("Pass: " + summaryObj["pass"]);
         return {
             jobId: realJobPid,
+            resultUrl: "",
             status: false,
             error: e,
         };
@@ -193,10 +196,11 @@ async function run() {
         const proxyPort = core.getInput('proxyPort') || "";
         const stepFailureThreshold = core.getInput('stepFailureThreshold') || "";
         const maxWaitTimeInMins = core.getInput('maxWaitTimeInMins') || "";
+        const waitForJobCompletion = (core.getInput('waitForJobCompletion') || "true").toLowerCase() === "true";
 
         // validateFORM
         let res: string | null | {
-            jobId: number; status: boolean, error?: any };
+            jobId: number; resultUrl: string, status: boolean, error?: any };
         res = AQFormValidate.validateAppURL(appURL);
         if (res != null) {
             throw new Error('ACCELQ App URL: ' + res);
@@ -227,12 +231,13 @@ async function run() {
             throw new Error(res);
         }
         // executeJob
-        res = await executeJob(appURL, userName, apiKey, tenantCode, jobId, runParam, proxyHost, proxyPort, stepFailureThreshold, maxWaitTimeInMins);
+        res = await executeJob(appURL, userName, apiKey, tenantCode, jobId, runParam, proxyHost, proxyPort, stepFailureThreshold, maxWaitTimeInMins, waitForJobCompletion);
         if (res.status) {
             console.log('Run Completed!!!');
         } else {
             core.setFailed(res.error?.message || "Job Failed!!!");
         }
+        core.setOutput("result-url", res.resultUrl);
     }
     catch (err: any) {
         core.setFailed(err.message);
