@@ -6,7 +6,7 @@ Github Actions ACCELQ CI Plugin
 
 ### `appURL`
 **Required**
-Your ACCELQ application URL in the format: https://<hostname>:<port_num>
+Your ACCELQ application URL in the format: https://hostname:port
 
 ### `userName`
 **Required**
@@ -28,8 +28,8 @@ This ID should come from the job saved in ACCELQ
 Run parameters in JSON string format. Example:
 ```
 {
-    \"username\": \"John Todd\",
-    \"password\": \"bxW&=UVw\"
+    "username": "John Todd",
+    "password": "bxW&=UVw"
 }
 ```
 
